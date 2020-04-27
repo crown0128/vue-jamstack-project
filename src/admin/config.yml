@@ -1,0 +1,24 @@
+backend:
+  name: github
+  repo: codebynao/vue-jamstack-project
+
+media_folder: static/uploads
+public_folder: /uploads
+
+collections:
+  - name: product
+    label: Product
+    folder: products
+    create: true
+    fields:
+      - { name: title, required: true, label: Title }
+      - { name: price, required: true, label: Price }
+      - {
+          name: description,
+          required: true,
+          label: Description,
+          widget: markdown,
+        }
+      - { name: image, required: true, label: Image, widget: image }
+      - { name: sku, required: false, label: Sku }
+      - { name: path, required: false, label: Path }

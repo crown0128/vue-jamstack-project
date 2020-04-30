@@ -22,7 +22,7 @@ module.exports = {
     {
       use: '@gridsome/source-filesystem',
       options: {
-        path: 'products/**/*.md',
+        path: 'collections/products/**/*.md',
         typeName: 'Product',
         remark: {
           plugins: [

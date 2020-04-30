@@ -2,9 +2,7 @@ const axios = require('axios')
 require('dotenv').config()
 
 exports.handler = (event, context, callback) => {
-  console.log('MAILCHIMP')
   const payload = JSON.parse(event.body)
-  console.log('payload', payload)
 
   if (event.httpMethod.toLowerCase() !== 'post') {
     return {

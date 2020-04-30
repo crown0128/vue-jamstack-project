@@ -8,7 +8,7 @@ public_folder: /uploads
 collections:
   - name: product
     label: Product
-    folder: products
+    folder: content/products
     create: true
     fields:
       - { name: title, required: true, label: Title }

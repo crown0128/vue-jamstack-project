@@ -3,6 +3,7 @@
 
 // Changes here require a server restart.
 // To restart press CTRL + C in terminal and run `gridsome develop`
+require('dotenv').config()
 
 module.exports = {
   siteName: "Naomi's JAMStack project",

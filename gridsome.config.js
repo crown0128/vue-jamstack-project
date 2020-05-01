@@ -18,24 +18,5 @@ module.exports = {
     },
   },
 
-  plugins: [
-    {
-      use: '@gridsome/source-filesystem',
-      options: {
-        path: 'content/products/**/*.md',
-        typeName: 'Product',
-        remark: {
-          plugins: [
-            // ...local plugins
-          ],
-        },
-      },
-    },
-    {
-      use: `gridsome-plugin-netlify-cms`,
-      options: {
-        publicPath: `/admin`,
-      },
-    },
-  ],
+  plugins: [],
 }

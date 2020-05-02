@@ -18,5 +18,16 @@ module.exports = {
     },
   },
 
-  plugins: [],
+  plugins: [
+    {
+      use: '@gridsome/source-contentful',
+      options: {
+        space: process.env.GRIDSOME_CONTENTFUL_SPACE, // required
+        accessToken: process.env.GRIDSOME_CONTENTFUL_ACCESS_TOKEN, // required
+        host: 'cdn.contentful.com',
+        environment: 'master',
+        typeName: 'Contentful',
+      },
+    },
+  ],
 }

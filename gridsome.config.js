@@ -17,8 +17,21 @@ module.exports = {
       ],
     },
   },
-
+  css: {
+    loaderOptions: {
+      postcss: {
+        plugins: [
+          ...(process.env.NODE_ENV === 'production'
+            ? [require('@fullhuman/postcss-purgecss')]
+            : []),
+        ],
+      },
+    },
+  },
   plugins: [
+    {
+      use: 'gridsome-plugin-tailwindcss',
+    },
     {
       use: '@gridsome/source-contentful',
       options: {
@@ -27,6 +40,13 @@ module.exports = {
         host: 'cdn.contentful.com',
         environment: 'master',
         typeName: 'Contentful',
+      },
+    },
+    {
+      use: 'gridsome-plugin-sass-resources-loader',
+      options: {
+        // provide path to the file with resources
+        resources: './src/styles/*.scss',
       },
     },
   ],

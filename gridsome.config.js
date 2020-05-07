@@ -17,24 +17,9 @@ module.exports = {
       ],
     },
   },
-  css: {
-    loaderOptions: {
-      postcss: {
-        plugins: [
-          ...(process.env.NODE_ENV === 'production'
-            ? [require('@fullhuman/postcss-purgecss')]
-            : []),
-        ],
-      },
-    },
-  },
   plugins: [
     {
       use: 'gridsome-plugin-tailwindcss',
-      options: {
-        config: './tailwind.config.js',
-        shouldPurge: false,
-      },
     },
     {
       use: '@gridsome/source-contentful',

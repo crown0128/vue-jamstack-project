@@ -32,7 +32,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="css">
 .vue-tags-input .ti-tag {
   background: #9b2c2c;
 }

@@ -56,7 +56,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="css" scoped>
 .custom-label input:checked + svg {
   /* position: absolute; */
   display: block !important;

@@ -32,7 +32,6 @@ query Products {
         description,
         price,
         artist {
-          id,
           name
         },
         createdAt,
@@ -135,15 +134,15 @@ export default {
             filters.orientations.includes(product.orientation)) &&
           // Tags (keywords) filter
           this.hasElements(product.tags, filters.keywords) &&
-          // Title search filter
-          product.title
+          // Title  or artist search filter
+          (product.title
             .toLowerCase()
-            .includes(filters.search.toLowerCase().trim()) &&
+            .includes(filters.search.toLowerCase().trim()) ||
+            product.artist.name
+              .toLowerCase()
+              .includes(filters.search.toLowerCase().trim())) &&
           // Themes filter
-          this.hasThemes(product.categories, filters.themes) &&
-          // Artists filter
-          (!filters.artists.length ||
-            filters.artists.some((artist) => artist.id === product.artist.id))
+          this.hasThemes(product.categories, filters.themes)
         )
       })
     },

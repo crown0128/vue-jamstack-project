@@ -13,45 +13,6 @@
     </div>
     <div class="w-full mx-auto">
       <div class="shadow-md">
-        <div
-          v-if="formattedArtistsList && formattedArtistsList.length"
-          class="tab tab__artists w-full overflow-hidden border-t"
-        >
-          <input
-            class="absolute opacity-0"
-            id="tab__artists-input"
-            type="radio"
-            name="tabs2"
-          />
-          <label
-            @click.prevent="toggleTab('artists')"
-            class="block p-5 leading-normal cursor-pointer"
-            for="tab__artists-input"
-            >Artists
-            <span
-              v-if="filters.artists.length"
-              class="bg-red-800 p-1 rounded text-white text-xs ml-2 px-2"
-              >{{ filters.artists.length }}</span
-            >
-          </label>
-          <div
-            class="tab__content overflow-hidden border-l-2 bg-gray-100 border-red-700 leading-normal"
-          >
-            <div class="p-5 z-0">
-              <multiselect
-                v-model="filters.artists"
-                :options="formattedArtistsList"
-                label="name"
-                track-by="name"
-                :multiple="true"
-                :close-on-select="false"
-                :show-labels="false"
-                :hide-selected="true"
-              >
-              </multiselect>
-            </div>
-          </div>
-        </div>
         <div class="tab tab__colors w-full overflow-hidden border-t">
           <input
             class="absolute opacity-0"
@@ -270,27 +231,13 @@
   </aside>
 </template>
 
-<static-query>
-query Artists {
-  artists: allContentfulArtist {
-    edges {
-      node {
-        id,
-        name
-      }
-    }
-  }
-}
-</static-query>
-
 <script>
 import Checkbox from '@/components/Checkbox'
-import Multiselect from 'vue-multiselect'
 import TagsInput from '@/components/TagsInput'
 
 export default {
   name: 'ProductsSidebar',
-  components: { Checkbox, Multiselect, TagsInput },
+  components: { Checkbox, TagsInput },
   data() {
     const defaultFilters = {
       isBlackAndWhite: false,
@@ -299,7 +246,6 @@ export default {
       keywords: [],
       search: '',
       themes: [],
-      artists: [],
     }
     return {
       colors: [
@@ -324,7 +270,6 @@ export default {
       ],
       defaultFilters,
       filters: JSON.parse(JSON.stringify(defaultFilters)),
-      formattedArtistsList: [],
       formats: [
         {
           name: 'square',
@@ -343,7 +288,7 @@ export default {
         },
       ],
       searchTimer: false,
-      tabs: ['artists', 'colors', 'format', 'themes', 'keywords'],
+      tabs: ['colors', 'format', 'themes', 'keywords'],
       themes: [
         {
           name: 'Fashion',
@@ -373,9 +318,6 @@ export default {
     }
   },
   watch: {
-    'filters.artists': function() {
-      this.$emit('updateList', { filters: this.filters })
-    },
     'filters.dominantColors': function() {
       this.$emit('updateList', { filters: this.filters })
     },
@@ -386,21 +328,6 @@ export default {
       if (newValue !== oldValue) {
         this.debounceSearch()
       }
-    },
-    $static: {
-      immediate: true,
-      deep: true,
-      handler() {
-        if (
-          this.$static &&
-          this.$static.artists &&
-          this.$static.artists.edges
-        ) {
-          this.formattedArtistsList = this.$static.artists.edges.map(
-            (artist) => artist.node
-          )
-        }
-      },
     },
   },
   computed: {
@@ -496,8 +423,7 @@ export default {
 }
 </script>
 
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
-<style>
+<style lang="scss">
 /* Tab content - closed */
 .tab__content {
   max-height: 0;
@@ -547,16 +473,5 @@ export default {
   transform: rotateX(180deg);
   background-color: #9b2c2c; /*.bg-red*/
   color: #f8fafc; /*.text-grey-lightest*/
-}
-
-.multiselect__tag,
-.multiselect__option--highlight,
-.multiselect__option--highlight::after {
-  background: #9b2c2c !important;
-}
-
-.multiselect__tag-icon,
-.multiselect__tag-icon::after {
-  color: #fff !important;
 }
 </style>

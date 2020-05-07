@@ -15,10 +15,11 @@
     "dotenv": "^8.2.0",
     "gridsome": "^0.7.0",
     "netlify-cli": "^2.50.0",
-    "vue-multiselect": "^2.1.6",
     "vue-paginate": "^3.6.0"
   },
   "devDependencies": {
-    "gridsome-plugin-tailwindcss": "^2.2.48"
+    "gridsome-plugin-tailwindcss": "^2.2.48",
+    "node-sass": "^4.14.1",
+    "sass-loader": "^8.0.2"
   }
 }

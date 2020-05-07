@@ -1,20 +1,21 @@
 <template>
   <div>
-    <vue-tags-input
-      v-model="tag"
-      :tags="tags"
-      placeholder="Add keyword"
-      @tags-changed="updateTags"
-    />
+    <ClientOnly>
+      <vue-tags-input
+        v-model="tag"
+        :tags="tags"
+        placeholder="Add keyword"
+        @tags-changed="updateTags"
+      />
+    </ClientOnly>
   </div>
 </template>
 <script>
-import VueTagsInput from '@johmun/vue-tags-input'
-
 export default {
   name: 'TagsInput',
   components: {
-    VueTagsInput,
+    VueTagsInput: () =>
+      import('@johmun/vue-tags-input').then((m) => m.VueTagsInput),
   },
   data() {
     return {

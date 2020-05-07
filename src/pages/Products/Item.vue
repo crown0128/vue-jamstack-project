@@ -1,5 +1,5 @@
 <template>
-  <div class="product">
+  <div v-if="item" class="product">
     <g-image :src="item.image.file.url" />
     <div class="product--info mt-2 grid grid-cols-1 sm:grid-cols-4">
       <p class="antialiased sm:col-span-3">

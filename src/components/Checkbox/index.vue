@@ -46,6 +46,9 @@ export default {
     }
   },
   watch: {
+    isChecked: function() {
+      this.mutableIsChecked = this.isChecked
+    },
     mutableIsChecked: function() {
       this.$emit('checked', this.mutableIsChecked)
     },

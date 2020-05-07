@@ -1,51 +1,85 @@
 <template>
-  <div class="md:flex flex-col md:min-h-screen w-full p-5">
-    <div class="relative mr-6 my-2">
-      <input
-        type="search"
-        class="bg-purple-white shadow rounded border-0 p-3"
-        placeholder="Search by name..."
-      />
-      <div class="absolute pin-r pin-t mt-3 mr-4 text-purple-lighter">
-        <svg
-          version="1.1"
-          class="h-4 text-dark"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlns:xlink="http://www.w3.org/1999/xlink"
-          x="0px"
-          y="0px"
-          viewBox="0 0 52.966 52.966"
-          style="enable-background:new 0 0 52.966 52.966;"
-          xml:space="preserve"
-        >
-          <path
-            d="M51.704,51.273L36.845,35.82c3.79-3.801,6.138-9.041,6.138-14.82c0-11.58-9.42-21-21-21s-21,9.42-21,21s9.42,21,21,21
-        c5.083,0,9.748-1.817,13.384-4.832l14.895,15.491c0.196,0.205,0.458,0.307,0.721,0.307c0.25,0,0.499-0.093,0.693-0.279
-        C52.074,52.304,52.086,51.671,51.704,51.273z M21.983,40c-10.477,0-19-8.523-19-19s8.523-19,19-19s19,8.523,19,19
-        S32.459,40,21.983,40z"
-          />
-        </svg>
+  <aside class="md:flex flex-col md:min-h-screen w-full p-5">
+    <div class="relative my-2">
+      <div class="mx-auto w-full">
+        <input
+          class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mx-auto"
+          id="search"
+          type="text"
+          placeholder="Search..."
+          v-model="filters.search"
+        />
       </div>
     </div>
-    <div class="w-full mx-auto p-8">
+    <div class="w-full mx-auto">
       <div class="shadow-md">
-        <div class="tab w-full overflow-hidden border-t">
+        <div
+          v-if="formattedArtistsList && formattedArtistsList.length"
+          class="tab tab__artists w-full overflow-hidden border-t"
+        >
           <input
             class="absolute opacity-0"
-            id="tab-single-one"
+            id="tab__artists-input"
             type="radio"
             name="tabs2"
           />
           <label
+            @click.prevent="toggleTab('artists')"
             class="block p-5 leading-normal cursor-pointer"
-            for="tab-single-one"
-            >Colors</label
-          >
+            for="tab__artists-input"
+            >Artists
+            <span
+              v-if="filters.artists.length"
+              class="bg-red-800 p-1 rounded text-white text-xs ml-2 px-2"
+              >{{ filters.artists.length }}</span
+            >
+          </label>
           <div
-            class="tab-content overflow-hidden border-l-2 bg-gray-100 border-red-700 leading-normal"
+            class="tab__content overflow-hidden border-l-2 bg-gray-100 border-red-700 leading-normal"
           >
             <div class="p-5 z-0">
-              <Checkbox text="Black and white" @checked="updateBlackAndWhite" />
+              <multiselect
+                v-model="filters.artists"
+                :options="formattedArtistsList"
+                label="name"
+                track-by="name"
+                :multiple="true"
+                :close-on-select="false"
+                :show-labels="false"
+                :hide-selected="true"
+              >
+              </multiselect>
+            </div>
+          </div>
+        </div>
+        <div class="tab tab__colors w-full overflow-hidden border-t">
+          <input
+            class="absolute opacity-0"
+            id="tab__colors-input"
+            type="radio"
+            name="tabs2"
+          />
+          <label
+            @click.prevent="toggleTab('colors')"
+            class="block p-5 leading-normal cursor-pointer"
+            for="tab__colors-input"
+            >Colors
+            <span
+              v-if="filters.isBlackAndWhite || filters.dominantColors.length"
+              class="bg-red-800 p-1 rounded text-white text-xs ml-2 px-2"
+              >{{
+                filters.isBlackAndWhite ? 1 : filters.dominantColors.length
+              }}</span
+            >
+          </label>
+          <div
+            class="tab__content overflow-hidden border-l-2 bg-gray-100 border-red-700 leading-normal"
+          >
+            <div class="p-5 z-0">
+              <Checkbox
+                text="Black and white"
+                @checked="updateFilters($event, 'isBlackAndWhite')"
+              />
               <div class="flex items-center">
                 <div class="colors grid grid-cols-1 sm:grid-cols-2 w-full">
                   <div
@@ -53,31 +87,78 @@
                     v-for="color in colors"
                     :key="color.hex"
                   >
-                    <div
-                      class="w-8 h-8 rounded-full mx-auto border-2 border-solid border-gray-400"
-                      :style="{ 'background-color': color.hex }"
-                    ></div>
-                    <p>{{ color.name }}</p>
+                    <input
+                      class="absolute opacity-0"
+                      v-model="filters.dominantColors"
+                      :value="color.name"
+                      :id="`color-${color.name}`"
+                      type="checkbox"
+                      :disabled="filters.isBlackAndWhite"
+                    />
+                    <label :for="`color-${color.name}`">
+                      <div
+                        class="w-8 h-8 rounded-full mx-auto border-2 border-solid border-gray-400 flex items-center justify-center"
+                        :style="{ 'background-color': color.hex }"
+                      >
+                        <svg
+                          class="filters---color selected w-4 h-4 pointer-events-none fill-current"
+                          :class="[
+                            color.name === 'white' || color.name === 'beige'
+                              ? 'text-black'
+                              : 'text-white',
+                            filters.dominantColors.includes(color.name)
+                              ? ''
+                              : 'hidden',
+                          ]"
+                          viewBox="0 0 172 172"
+                        >
+                          <g
+                            fill="none"
+                            stroke-width="none"
+                            stroke-miterlimit="10"
+                            font-family="none"
+                            font-weight="none"
+                            font-size="none"
+                            text-anchor="none"
+                            style="mix-blend-mode:normal"
+                          >
+                            <path d="M0 172V0h172v172z" />
+                            <path
+                              d="M145.433 37.933L64.5 118.8658 33.7337 88.0996l-10.134 10.1341L64.5 139.1341l91.067-91.067z"
+                              fill="currentColor"
+                              stroke-width="1"
+                            />
+                          </g>
+                        </svg>
+                      </div>
+                      <p>{{ color.name }}</p>
+                    </label>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="tab w-full overflow-hidden border-t bg-white">
+        <div class="tab tab__format w-full overflow-hidden border-t bg-white">
           <input
             class="absolute opacity-0"
-            id="tab-single-two"
+            id="tab__format-input"
             type="radio"
             name="tabs2"
           />
           <label
+            @click.prevent="toggleTab('format')"
             class="block p-5 leading-normal cursor-pointer"
-            for="tab-single-two"
-            >Format</label
+            for="tab__format-input"
+            >Format
+            <span
+              v-if="filters.orientations.length"
+              class="bg-red-800 p-1 rounded text-white text-xs ml-2 px-2"
+              >{{ filters.orientations.length }}</span
+            ></label
           >
           <div
-            class="tab-content overflow-hidden border-l-2 bg-gray-100 border-red-700 leading-normal"
+            class="tab__content overflow-hidden border-l-2 bg-gray-100 border-red-700 leading-normal"
           >
             <div class="p-5">
               <div class="flex items-center">
@@ -86,30 +167,50 @@
                   :key="format.name"
                   class="w-1/3 mx-auto  text-center"
                 >
-                  <div
-                    class="border-2 border-grey-900 border-solid mx-auto "
-                    :class="[`w-${format.width} h-${format.height}`]"
-                  ></div>
-                  <span class="">{{ format.name }}</span>
+                  <input
+                    class="absolute opacity-0"
+                    v-model="filters.orientations"
+                    :value="format.name"
+                    :id="`format-${format.name}`"
+                    type="checkbox"
+                  />
+                  <label :for="`format-${format.name}`">
+                    <div
+                      class="border-2 border-grey-900 border-solid mx-auto"
+                      :class="[
+                        `w-${format.width} h-${format.height}`,
+                        filters.orientations.includes(format.name)
+                          ? 'border-red-800'
+                          : '',
+                      ]"
+                    ></div>
+                    <span class="">{{ format.name }}</span>
+                  </label>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="tab w-full overflow-hidden border-t">
+        <div class="tab tab__themes w-full overflow-hidden border-t">
           <input
             class="absolute opacity-0"
-            id="tab-single-three"
+            id="tab__themes-input"
             type="radio"
             name="tabs2"
           />
           <label
+            @click.prevent="toggleTab('themes')"
             class="block p-5 leading-normal cursor-pointer"
-            for="tab-single-three"
-            >Theme</label
-          >
+            for="tab__themes-input"
+            >Theme
+            <span
+              v-if="filters.themes.length"
+              class="bg-red-800 p-1 rounded text-white text-xs ml-2 px-2"
+              >{{ filters.themes.length }}</span
+            >
+          </label>
           <div
-            class="tab-content overflow-hidden border-l-2 bg-gray-100 border-red-700 leading-normal"
+            class="tab__content overflow-hidden border-l-2 bg-gray-100 border-red-700 leading-normal"
           >
             <p class="p-5">
               <Checkbox
@@ -117,63 +218,89 @@
                 :key="theme.value"
                 :text="theme.name"
                 :isChecked="filters.themes.includes(theme.value)"
+                @checked="
+                  updateFilters(
+                    { isChecked: $event, value: theme.value },
+                    'themes'
+                  )
+                "
                 class="mb-3"
               />
             </p>
           </div>
         </div>
-        <div class="tab w-full overflow-hidden border-t">
+        <div class="tab tab__keywords w-full overflow-hidden border-t">
           <input
             class="absolute opacity-0"
-            id="tab-single-four"
+            id="tab__keywords-input"
             type="radio"
             name="tabs2"
           />
           <label
+            @click.prevent="toggleTab('keywords')"
             class="block p-5 leading-normal cursor-pointer"
-            for="tab-single-four"
-            >Keywords</label
-          >
+            for="tab__keywords-input"
+            >Keywords
+
+            <small>
+              <span
+                v-if="filters.keywords.length"
+                class="bg-red-800 p-1 rounded text-white text-xs ml-2 px-2"
+                >{{ filters.keywords.length }}</span
+              >
+            </small>
+          </label>
           <div
-            class="tab-content overflow-hidden border-l-2 bg-gray-100 border-red-700 leading-normal"
+            class="tab__content overflow-hidden border-l-2 bg-gray-100 border-red-700 leading-normal"
           >
-            <p class="p-5">
-              vue-tags-input
-            </p>
-          </div>
-        </div>
-        <div class="tab w-full overflow-hidden border-t">
-          <input
-            class="absolute opacity-0"
-            id="tab-single-five"
-            type="radio"
-            name="tabs2"
-          />
-          <label
-            class="block p-5 leading-normal cursor-pointer"
-            for="tab-single-five"
-            >Price</label
-          >
-          <div
-            class="tab-content overflow-hidden border-l-2 bg-gray-100 border-red-700 leading-normal"
-          >
-            <p class="p-5">
-              Input range
-            </p>
+            <div class="p-5">
+              <TagsInput @update="updateFilters($event, 'keywords')" />
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+    <button
+      v-if="isFiltered"
+      class="bg-red-800 hover:bg-red-900 text-white font-bold py-2 px-4 rounded mt-3"
+      @click.prevent="resetFilters"
+    >
+      Reset
+    </button>
+  </aside>
 </template>
+
+<static-query>
+query Artists {
+  artists: allContentfulArtist {
+    edges {
+      node {
+        id,
+        name
+      }
+    }
+  }
+}
+</static-query>
 
 <script>
 import Checkbox from '@/components/Checkbox'
+import Multiselect from 'vue-multiselect'
+import TagsInput from '@/components/TagsInput'
+
 export default {
   name: 'ProductsSidebar',
-  components: { Checkbox },
+  components: { Checkbox, Multiselect, TagsInput },
   data() {
-    // @TODO add reset button
+    const defaultFilters = {
+      isBlackAndWhite: false,
+      dominantColors: [],
+      orientations: [],
+      keywords: [],
+      search: '',
+      themes: [],
+      artists: [],
+    }
     return {
       colors: [
         { name: 'pink', hex: '#e327c0' },
@@ -195,18 +322,9 @@ export default {
         { name: 'brown', hex: '#82370c' },
         { name: 'white', hex: '#ffffff' },
       ],
-
-      filters: {
-        // Black and white or color
-        isBlackAndWhite: false,
-        dominantColors: [], // Multi select
-        // @TODO range from lowest price to highest price
-        price: null, // Range
-        orientation: [], // Radio (to update)
-        keywords: [], // tags
-        name: null, // input
-        themes: [],
-      },
+      defaultFilters,
+      filters: JSON.parse(JSON.stringify(defaultFilters)),
+      formattedArtistsList: [],
       formats: [
         {
           name: 'square',
@@ -224,6 +342,8 @@ export default {
           height: 12,
         },
       ],
+      searchTimer: false,
+      tabs: ['artists', 'colors', 'format', 'themes', 'keywords'],
       themes: [
         {
           name: 'Fashion',
@@ -252,29 +372,145 @@ export default {
       ],
     }
   },
+  watch: {
+    'filters.artists': function() {
+      this.$emit('updateList', { filters: this.filters })
+    },
+    'filters.dominantColors': function() {
+      this.$emit('updateList', { filters: this.filters })
+    },
+    'filters.orientations': function() {
+      this.$emit('updateList', { filters: this.filters })
+    },
+    'filters.search': function(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        this.debounceSearch()
+      }
+    },
+    $static: {
+      immediate: true,
+      deep: true,
+      handler() {
+        if (
+          this.$static &&
+          this.$static.artists &&
+          this.$static.artists.edges
+        ) {
+          this.formattedArtistsList = this.$static.artists.edges.map(
+            (artist) => artist.node
+          )
+        }
+      },
+    },
+  },
+  computed: {
+    isFiltered() {
+      return (
+        JSON.stringify(this.filters) !== JSON.stringify(this.defaultFilters)
+      )
+    },
+  },
   methods: {
-    updateBlackAndWhite(isChecked) {
-      this.isBlackAndWhite = isChecked
-      // @TODO update query
+    closeTab(tab) {
+      const tabInput = document.getElementById(`tab__${tab}-input`)
+      if (!tabInput) {
+        return
+      }
+      tabInput.checked = null
+      document.querySelector(`.tab__${tab}`).classList.add('overflow-hidden')
+      document
+        .querySelector(`.tab__${tab} .tab__content`)
+        .classList.add('overflow-hidden')
+    },
+    debounceSearch() {
+      clearTimeout(this.searchTimer)
+      this.searchTimer = setTimeout(() => {
+        this.$emit('updateList', { filters: this.filters })
+      }, 500)
+    },
+    resetFilters() {
+      this.filters = JSON.parse(JSON.stringify(this.defaultFilters))
+      this.$emit('updateList', { filters: this.filters, reset: true })
+      for (const tab of this.tabs) {
+        this.closeTab(tab)
+      }
+    },
+    toggleTab(selectedTabName) {
+      const selectedTab = document.getElementById(
+        `tab__${selectedTabName}-input`
+      )
+      if (!selectedTab) {
+        return
+      }
+      selectedTab.checked = selectedTab.checked ? null : true
+      for (const tab of this.tabs) {
+        const tabInput = document.getElementById(`tab__${tab}-input`)
+        if (!tabInput) {
+          continue
+        }
+
+        if (tabInput.checked) {
+          document
+            .querySelector(`.tab__${tab}`)
+            .classList.remove('overflow-hidden')
+          document
+            .querySelector(`.tab__${tab} .tab__content`)
+            .classList.remove('overflow-hidden')
+        } else {
+          document
+            .querySelector(`.tab__${tab}`)
+            .classList.add('overflow-hidden')
+          document
+            .querySelector(`.tab__${tab} .tab__content`)
+            .classList.add('overflow-hidden')
+        }
+      }
+    },
+    updateFilters(value, filter) {
+      switch (filter) {
+        case 'keywords':
+          this.filters.keywords = value.map((tag) => tag.text)
+          break
+        case 'themes':
+          this.filters.themes = this.updateSelectedThemes(
+            value,
+            this.filters.themes
+          )
+          break
+        default:
+          this.filters[filter] = value
+          break
+      }
+      this.$emit('updateList', { filters: this.filters })
+    },
+    updateSelectedThemes(item, selectedThemes) {
+      const valueIndex = selectedThemes.indexOf(item.value)
+      if (!item.isChecked && valueIndex !== -1) {
+        selectedThemes.splice(valueIndex, 1)
+      } else if (item.isChecked && valueIndex === -1) {
+        selectedThemes.push(item.value)
+      }
+      return selectedThemes
     },
   },
 }
 </script>
 
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style>
 /* Tab content - closed */
-.tab-content {
+.tab__content {
   max-height: 0;
   -webkit-transition: max-height 0.35s;
   -o-transition: max-height 0.35s;
   transition: max-height 0.35s;
 }
 /* :checked - resize to full height */
-.tab input:checked ~ .tab-content {
+.tab > input:checked ~ .tab__content {
   max-height: 100vh;
 }
 /* Label formatting when open */
-.tab input:checked + label {
+.tab > input:checked + label {
   /*@apply text-xl p-5 border-l-2 border-red-700 bg-gray-100 text-red*/
   font-size: 1.25rem; /*.text-xl*/
   padding: 1.25rem; /*.p-5*/
@@ -284,7 +520,7 @@ export default {
   color: #c53030; /*.text-indigo*/
 }
 /* Icon */
-.tab label::after {
+.tab > label::after {
   float: right;
   right: 0;
   top: 0;
@@ -299,14 +535,7 @@ export default {
   transition: all 0.35s;
 }
 /* Icon formatting - closed */
-.tab input[type='checkbox'] + label::after {
-  content: '+';
-  font-weight: bold; /*.font-bold*/
-  border-width: 1px; /*.border*/
-  border-radius: 9999px; /*.rounded-full */
-  border-color: #b8c2cc; /*.border-grey*/
-}
-.tab input[type='radio'] + label::after {
+.tab > input[type='radio'] + label::after {
   content: '\25BE';
   font-weight: bold; /*.font-bold*/
   border-width: 1px; /*.border*/
@@ -314,14 +543,20 @@ export default {
   border-color: #b8c2cc; /*.border-grey*/
 }
 /* Icon formatting - open */
-.tab input[type='checkbox']:checked + label::after {
-  transform: rotate(315deg);
-  background-color: #c53030; /*.bg-red*/
+.tab > input[type='radio']:checked + label::after {
+  transform: rotateX(180deg);
+  background-color: #9b2c2c; /*.bg-red*/
   color: #f8fafc; /*.text-grey-lightest*/
 }
-.tab input[type='radio']:checked + label::after {
-  transform: rotateX(180deg);
-  background-color: #c53030; /*.bg-red*/
-  color: #f8fafc; /*.text-grey-lightest*/
+
+.multiselect__tag,
+.multiselect__option--highlight,
+.multiselect__option--highlight::after {
+  background: #9b2c2c !important;
+}
+
+.multiselect__tag-icon,
+.multiselect__tag-icon::after {
+  color: #fff !important;
 }
 </style>

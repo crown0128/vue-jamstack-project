@@ -42,12 +42,5 @@ module.exports = {
         typeName: 'Contentful',
       },
     },
-    {
-      use: 'gridsome-plugin-sass-resources-loader',
-      options: {
-        // provide path to the file with resources
-        resources: './src/styles/*.scss',
-      },
-    },
   ],
 }

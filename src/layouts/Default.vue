@@ -1,9 +1,9 @@
 <template>
   <div class="layout">
     <Header />
-    <div class="mx-auto mt-5">
+    <main class="mx-auto mt-5">
       <slot />
-    </div>
+    </main>
   </div>
 </template>
 

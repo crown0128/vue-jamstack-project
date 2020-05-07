@@ -19,6 +19,7 @@
     "netlify-cli": "^2.50.0",
     "node-sass": "^4.14.0",
     "sass-loader": "^8.0.2",
+    "tailwindcss": "^1.4.5",
     "vue-multiselect": "^2.1.6",
     "vue-paginate": "^3.6.0"
   },

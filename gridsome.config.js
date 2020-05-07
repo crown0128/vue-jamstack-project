@@ -31,6 +31,10 @@ module.exports = {
   plugins: [
     {
       use: 'gridsome-plugin-tailwindcss',
+      options: {
+        config: './tailwind.config.js',
+        shouldPurge: false,
+      },
     },
     {
       use: '@gridsome/source-contentful',

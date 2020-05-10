@@ -1,20 +1,35 @@
 <template>
-  <Layout>
+  <Layout ref="layout">
     <section class="flex w-full">
       <Sidebar class="sm:w-1/3 lg:w-1/5 w-full" @updateList="updateList" />
       <div class="products sm:w-2/3 lg:w-4/5 w-full">
         <h1 class="text-4xl antialiased font-medium text-center pb-6">
           All Photographs
         </h1>
-        <ul
-          v-if="filteredList && filteredList.length"
-          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"
-        >
-          <li v-for="item in filteredList" :key="item.node.id">
-            <Item :item="item.node" />
-          </li>
-        </ul>
-        <p class="text-xl antialiased font-medium text-center pt-6" v-else>
+        <template v-if="filteredList && filteredList.length">
+          <paginate
+            name="products"
+            :list="filteredList"
+            :container="this"
+            per="4"
+          >
+            <ul
+              class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"
+            >
+              <li v-for="item in paginated('products')" :key="item.node.id">
+                <Item :item="item.node" />
+              </li>
+            </ul>
+          </paginate>
+          <PaginationLinks
+            :container="{
+              state: paginate.products,
+              el: $refs.layout,
+            }"
+            paginateName="products"
+          />
+        </template>
+        <p v-else class="text-xl antialiased font-medium text-center pt-6">
           No photographs to show...
         </p>
       </div>
@@ -56,6 +71,7 @@ query Products {
 
 <script>
 import Item from './Item'
+import PaginationLinks from '@/components/PaginationLinks'
 import Sidebar from './Sidebar'
 
 export default {
@@ -63,12 +79,13 @@ export default {
     title: 'Products',
   },
   name: 'Products',
-  components: { Item, Sidebar },
+  components: { Item, PaginationLinks, Sidebar },
   data() {
     return {
       filteredList: [],
       isFiltered: false,
       list: [],
+      paginate: ['products'],
     }
   },
   watch: {

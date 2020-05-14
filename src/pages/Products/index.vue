@@ -11,7 +11,7 @@
             name="products"
             :list="filteredList"
             :container="this"
-            per="4"
+            :per="4"
           >
             <ul
               class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"
@@ -44,6 +44,7 @@ query Products {
       node {
         id,
         title,
+        slug,
         description,
         price,
         artist {
@@ -62,7 +63,8 @@ query Products {
           }
         },
         dominantColors, 
-        isBlackAndWhite
+        isBlackAndWhite,
+        path
       }
     }
   }

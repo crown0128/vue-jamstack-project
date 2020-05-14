@@ -19,6 +19,9 @@ module.exports = {
   },
   plugins: [
     {
+      use: 'gridsome-plugin-modal',
+    },
+    {
       use: 'gridsome-plugin-tailwindcss',
     },
     {
@@ -32,4 +35,12 @@ module.exports = {
       },
     },
   ],
+  templates: {
+    ContentfulProduct: [
+      {
+        path: '/products/:slug',
+        component: './src/templates/Product/index.vue',
+      },
+    ],
+  },
 }

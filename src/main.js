@@ -4,9 +4,11 @@ import '~/styles/index.scss'
 
 import DefaultLayout from '~/layouts/Default.vue'
 import VuePaginate from 'vue-paginate'
+import VueImg from 'v-img'
 
 export default function(Vue, { router, head, isClient }) {
   // Set default layout as a global component
   Vue.component('Layout', DefaultLayout)
   Vue.use(VuePaginate)
+  Vue.use(VueImg)
 }

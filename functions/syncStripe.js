@@ -64,12 +64,16 @@ const updateProduct = async (product, contentfulClient) => {
 }
 
 const createProduct = async (product, contentfulClient) => {
+  const contentfulSpace = await contentfulClient.getSpace(
+    process.env.GRIDSOME_CONTENTFUL_SPACE
+  )
+
   // 1. Create product on Stripe
   const stripeProduct = await Stripe.products.create({
     name: product.name['en-US'],
     type: 'good',
     description: product.description['en-US'],
-    attributes: ['format'],
+    attributes: ['name', 'format'],
     metadata: {
       contentfulId: product.id,
       slug: product.slug['en-US'],
@@ -77,28 +81,26 @@ const createProduct = async (product, contentfulClient) => {
   })
 
   // Create new SKU for this product
+  const dimensionId = product.dimensions['en-US'][0].sys.id
+  const dimensionEntry = await contentfulSpace.getEntry(dimensionId)
   const SKU = await Stripe.skus.create({
     attributes: {
-      // Static for now @TODO dynamic format once options are available
+      // Static for now, will be dynamic format once options are available
+      name: dimensionEntry.fields.name['en-US'],
       format: 'classic',
     },
-    // @TODO update depending on the format once multiple format will be available
     // Price in cents
     price: product.price['en-US'] * 100,
     currency: 'eur',
-    inventory: { type: 'finite', quantity: 500 },
+    // Checkout only allows sku with infinite inventory
+    inventory: { type: 'infinite' },
     product: stripeProduct.id,
   })
 
   // 3. Update the product on  Contentful with the Stripe info (id, sku id, quantity)
-  const contentfulSpace = await contentfulClient.getSpace(
-    process.env.GRIDSOME_CONTENTFUL_SPACE
-  )
   const entry = await contentfulSpace.getEntry(product.id)
   entry.fields.stripeId = { 'en-US': stripeProduct.id }
   entry.fields.sku = { 'en-US': SKU.id }
-  entry.fields.quantity = { 'en-US': SKU.inventory.quantity }
-  entry.fields.maxQuantity = { 'en-US': SKU.inventory.quantity }
   entry.fields.updatedByApi = { 'en-US': true }
   const updatedEntry = await entry.update()
   await updatedEntry.publish()

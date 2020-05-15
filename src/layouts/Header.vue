@@ -44,8 +44,8 @@
           >
         </div>
         <div>
-          <a
-            href="#"
+          <g-link
+            to="/cart"
             class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-red-800 hover:bg-white mt-4 lg:mt-0 "
           >
             <svg
@@ -63,7 +63,7 @@
                 d="M5.67 6H23l-1.68 8.39a2 2 0 0 1-2 1.61H8.75a2 2 0 0 1-2-1.74L5.23 2.74A2 2 0 0 0 3.25 1H1"
               ></path>
             </svg>
-          </a>
+          </g-link>
         </div>
       </div>
     </nav>

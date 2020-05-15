@@ -24,12 +24,12 @@
             @click.prevent="$modal.hide('addedToCart')"
             >&larr; Continue shopping
           </a>
-          <button
+          <g-link
             class="px-4 py-2 leading-none border rounded bg-red-800 text-white hover:bg-red-900 mt-4 lg:mt-0 tracking-wide text-lg"
-            @click.prevent="addToCart"
+            to="/cart"
           >
             Go to cart &rarr;
-          </button>
+          </g-link>
         </div>
       </div>
     </modal>
@@ -86,6 +86,7 @@ query Product ($path: String!) {
    product: contentfulProduct (path: $path) {
     id,
     title,
+    slug,
     description,
     price,
     artist {
@@ -111,7 +112,9 @@ query Product ($path: String!) {
       },
       height,
       width
-    }
+    },
+    stripeId,
+    sku
   }
 }
 </page-query>
@@ -132,8 +135,12 @@ export default {
         cart.push({
           id: product.id,
           title: product.title,
+          slug: product.slug,
+          artist: product.artist.name,
           price: product.price,
           image: product.image.file.url,
+          stripeId: product.stripeId,
+          sku: product.sku,
           quantity: 1,
         })
       } else {

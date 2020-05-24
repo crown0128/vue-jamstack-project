@@ -18,6 +18,7 @@
     "gridsome": "^0.7.0",
     "gridsome-plugin-modal": "^0.1.1",
     "netlify-cli": "^2.50.0",
+    "netlify-identity-widget": "^1.6.0",
     "stripe": "^8.52.0",
     "v-img": "^0.2.0",
     "vue-js-modal": "^2.0.0-rc.3",

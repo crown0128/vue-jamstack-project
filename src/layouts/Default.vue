@@ -9,9 +9,26 @@
 
 <script>
 import Header from './Header'
+import netlifyIdentity from 'netlify-identity-widget'
+
 export default {
   name: 'Layout',
   components: { Header },
+  mounted() {
+    let netlifyIdentityScript = document.createElement('script')
+    netlifyIdentityScript.setAttribute(
+      'src',
+      'https://identity.netlify.com/v1/netlify-identity-widget.js'
+    )
+    document.head.appendChild(netlifyIdentityScript)
+
+    netlifyIdentity.init({
+      container: '#netlify-login',
+    })
+    const user = netlifyIdentity.currentUser()
+    console.log(user)
+    console.log('route', this.$route)
+  },
 }
 </script>
 

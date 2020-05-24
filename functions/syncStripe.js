@@ -1,6 +1,7 @@
 require('dotenv').config()
 const Stripe = require('stripe')(process.env.GRIDSOME_STRIPE_SECRET_API_KEY)
 const Contentful = require('contentful-management')
+// https://community.netlify.com/t/how-to-include-dependencies-in-netlify-lambda-functions/2323/5
 
 exports.handler = async function(event, context, callback) {
   try {

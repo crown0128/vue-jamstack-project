@@ -17,6 +17,7 @@
     "dotenv": "^8.2.0",
     "gridsome": "^0.7.0",
     "gridsome-plugin-modal": "^0.1.1",
+    "mongoose": "^5.9.15",
     "netlify-cli": "^2.50.0",
     "netlify-identity-widget": "^1.6.0",
     "stripe": "^8.52.0",

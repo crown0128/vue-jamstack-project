@@ -62,6 +62,14 @@
             </div>
           </template>
           <template v-slot:content>
+            <li v-if="isLoggedIn" class="dropdown__item">
+              <g-link to="/cart">My account </g-link>
+            </li>
+            <li v-if="isLoggedIn" class="dropdown__item">
+              <g-link to="/cart">
+                My orders
+              </g-link>
+            </li>
             <div id="netlify-login" data-netlify-identity-menu></div>
           </template>
         </Dropdown>
@@ -102,16 +110,26 @@ query {
 
 <script>
 import Dropdown from '@/components/Dropdown'
+
 export default {
   name: 'Header',
   components: {
     Dropdown,
   },
+  data() {
+    return {
+      isLoggedIn: false,
+    }
+  },
+  mounted() {
+    this.isLoggedIn = localStorage && localStorage.getItem('gotrue.user')
+  },
 }
 </script>
 
 <style lang="scss">
-.netlify-identity-item {
+.netlify-identity-item,
+.dropdown__item {
   a {
     display: block;
     padding: 15px;
@@ -125,5 +143,8 @@ export default {
     color: #edf2f7;
     background-color: #c53030;
   }
+}
+.netlify-identity-user-details {
+  display: none;
 }
 </style>

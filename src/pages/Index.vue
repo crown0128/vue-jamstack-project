@@ -32,18 +32,6 @@ export default {
   metaInfo: {
     title: 'Hello, world!',
   },
-  created() {
-    axios
-      .get(`${process.env.GRIDSOME_API_URL}/hello`)
-      .then(function(response) {
-        // handle success
-        console.log(response)
-      })
-      .catch(function(error) {
-        // handle error
-        console.log(error)
-      })
-  },
 }
 </script>
 

@@ -1,10 +1,15 @@
 <template>
   <Layout>
     <div class="grid grid-cols-3">
-      <div v-if="order && order.length" class="col-start-2 col-span-1">
+      <div v-if="order && order.items.length" class="col-start-2 col-span-1">
         <h1 class="text-3xl font-semibold text-center">Thank you!</h1>
         <h2 class="text-center">Order summary</h2>
-        <div v-for="item in order" :key="item.id" class="grid grid-cols-6 mt-5">
+        <h3>Ref: {{ order.ref }}</h3>
+        <div
+          v-for="item in order.items"
+          :key="item.id"
+          class="grid grid-cols-6 mt-5"
+        >
           <img
             :src="item.image"
             :alt="item.title"
@@ -21,7 +26,7 @@
         </div>
         <div class=" grid grid-rows-2">
           <p class="text-right text-lg font-medium">
-            Total: {{ getTotalPrice(order) }}€
+            Total: {{ getTotalPrice(order.items) }}€
           </p>
           <div class="text-center mt-4">
             <g-link
@@ -38,11 +43,13 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'CheckoutSuccess',
   data() {
     return {
-      order: [],
+      order: { ref: '', items: [] },
     }
   },
   mounted() {
@@ -50,18 +57,56 @@ export default {
       this.order = JSON.parse(sessionStorage.getItem('order'))
       return
     }
-    this.order =
+    this.order.items =
       (localStorage.getItem('cart') &&
         JSON.parse(localStorage.getItem('cart'))) ||
       []
+    this.order.ref = Math.random()
+      .toString(36)
+      .substr(2)
     sessionStorage.setItem('order', JSON.stringify(this.order))
     localStorage.removeItem('cart')
+
+    this.saveOrder(this.order)
   },
   methods: {
-    getTotalPrice(order) {
-      return order.reduce(function(prev, cur) {
+    getTotalPrice(items) {
+      return items.reduce(function(prev, cur) {
         return prev + cur.price * cur.quantity
       }, 0)
+    },
+    saveOrder(order) {
+      const user =
+        localStorage.getItem('gotrue.user') &&
+        JSON.parse(localStorage.getItem('gotrue.user'))
+
+      if (!user || !user.id) {
+        return
+      }
+      const items = order.items.map((item) => {
+        return {
+          id: item.id,
+          quantity: item.quantity,
+          price: item.price,
+        }
+      })
+
+      const formattedOrder = {
+        ref: order.ref,
+        items,
+        total: this.getTotalPrice(order.items),
+        userId: user.id,
+      }
+
+      axios
+        .post(`${process.env.GRIDSOME_API_URL}/saveUserOrder`, {
+          order: formattedOrder,
+        })
+        .catch((error) => {
+          // handle error
+          // @TODO display error message
+          console.log(error)
+        })
     },
   },
 }

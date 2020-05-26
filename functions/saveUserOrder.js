@@ -2,7 +2,7 @@ require('dotenv').config()
 const mongoose = require('mongoose')
 const UserModel = require('../models/User')
 
-exports.handler = async function(event, context, callback) {
+exports.handler = async (event, context, callback) => {
   try {
     if (event.httpMethod.toLowerCase() !== 'post') {
       return {
@@ -18,20 +18,24 @@ exports.handler = async function(event, context, callback) {
 
     const payload = JSON.parse(event.body)
 
-    if (payload && payload.user) {
-      await UserModel.create({
-        netlifyId: payload.user.id,
-        email: payload.user.email,
-        name: payload.user.user_metadata.full_name,
-        createdAt: payload.user.created_at,
-      })
+    if (!payload.order) {
+      return {
+        statusCode: 400,
+        body: 'order is missing.',
+      }
     }
+
+    const updatedUser = await UserModel.findOneAndUpdate(
+      { netlifyId: payload.order.userId },
+      { $addToSet: { orders: payload.order } },
+      { new: true }
+    )
     return {
-      statusCode: 204,
-      body: null,
+      statusCode: 200,
+      body: JSON.stringify(updatedUser),
     }
   } catch (error) {
-    console.error('Error while saving new user in DB', error)
+    console.error('Error while saving order in DB', error)
     return {
       statusCode: 500,
       body: JSON.stringify(error),

@@ -13,12 +13,16 @@ const UserSchema = new Schema({
         // Contentful ids
         items: [
           {
-            id: String,
+            productId: String,
             quantity: Number,
             price: Number,
           },
         ],
         total: Number,
+        createdAt: {
+          type: Date,
+          default: Date.now(),
+        },
       },
     ],
     default: [],

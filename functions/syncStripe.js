@@ -1,6 +1,6 @@
 require('dotenv').config()
 const Stripe = require('stripe')(process.env.GRIDSOME_STRIPE_SECRET_API_KEY)
-const Contentful = require('contentful-management')
+const ContentfulManagement = require('contentful-management')
 // https://community.netlify.com/t/how-to-include-dependencies-in-netlify-lambda-functions/2323/5
 
 exports.handler = async function(event, context, callback) {
@@ -39,7 +39,7 @@ exports.handler = async function(event, context, callback) {
 }
 
 const upsertProduct = async (product) => {
-  const contentfulClient = Contentful.createClient({
+  const contentfulClient = ContentfulManagement.createClient({
     accessToken: process.env.GRIDSOME_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
   })
   if (product.stripeId) {

@@ -2285,7 +2285,7 @@ aws4@^1.8.0:
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.9.1.tgz#7e33d8f7d449b3f673cd72deb9abdc552dbe528e"
   integrity sha512-wMHVg2EOHaMRxbzgFJ9gtjOOCrI80OHLG14rxi28XwOW8ux6IiEbRCGGGqCtdAIg4FQCbW20k9RsT4y3gJlFug==
 
-axios@^0.19.0, axios@^0.19.2:
+axios@^0.19.0, axios@^0.19.1, axios@^0.19.2:
   version "0.19.2"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.19.2.tgz#3ea36c5d8818d0d5f8a8a97a6d36b86cdc00cb27"
   integrity sha512-fjgm5MvRHLhx+osE2xoekY70AhARk3a6hkN+3Io1jc00jtquGvxYlKlsFUhmUET0V5te6CcZI7lcv2Ym61mjHA==
@@ -3516,7 +3516,7 @@ contentful-resolve-response@^1.1.4:
   dependencies:
     lodash "^4.17.4"
 
-contentful-sdk-core@^6.0.1, contentful-sdk-core@^6.4.0:
+contentful-sdk-core@^6.0.1, contentful-sdk-core@^6.4.0, contentful-sdk-core@^6.4.5:
   version "6.4.5"
   resolved "https://registry.yarnpkg.com/contentful-sdk-core/-/contentful-sdk-core-6.4.5.tgz#e73f4c5426f354608543fc73e46c17c6730180e9"
   integrity sha512-rygNuiwbG6UKrJg6EDlaKewayTeLWrjA2wJwVmq7rV/DYo0cic6t28y0EMhRQ4pgJDV5HyUQFoFeBm2lwLfG2Q==
@@ -3534,6 +3534,17 @@ contentful@^6.1.1:
     contentful-sdk-core "^6.0.1"
     json-stringify-safe "^5.0.1"
     lodash "^4.17.5"
+
+contentful@^7.14.4:
+  version "7.14.4"
+  resolved "https://registry.yarnpkg.com/contentful/-/contentful-7.14.4.tgz#882c2785cab953c0729453f60dbb8acd556f5f6a"
+  integrity sha512-BY5mEr8DkPxVPot4aMurtuOqf9HxkXW6T9KRDUtJcxua/sAITjYu3YOeZG8PeNGYI40R5yqIvpJ6vMI+/lg4Fg==
+  dependencies:
+    axios "^0.19.1"
+    contentful-resolve-response "^1.1.4"
+    contentful-sdk-core "^6.4.5"
+    json-stringify-safe "^5.0.1"
+    lodash "^4.17.11"
 
 convert-source-map@^1.7.0:
   version "1.7.0"

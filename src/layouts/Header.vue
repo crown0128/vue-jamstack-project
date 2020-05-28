@@ -51,11 +51,11 @@
           </template>
           <template v-slot:content>
             <li v-if="isLoggedIn" class="dropdown__item">
-              <g-link to="/cart">Settings </g-link>
+              <g-link to="/cart">General </g-link>
             </li>
             <li v-if="isLoggedIn" class="dropdown__item">
               <g-link to="/account/orders">
-                My orders
+                Orders
               </g-link>
             </li>
             <div id="netlify-login" data-netlify-identity-menu></div>

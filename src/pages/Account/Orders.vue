@@ -1,7 +1,7 @@
 <template>
   <Layout>
     <h1>My orders</h1>
-    <div v-if="orders.length">
+    <div v-if="orders.length && !selectedOrder">
       <table class="table-auto">
         <thead>
           <tr>
@@ -16,11 +16,18 @@
             <td class="border px-4 py-2">{{ order.ref }}</td>
             <td class="border px-4 py-2">{{ order.total }}€</td>
             <td class="border px-4 py-2">{{ order.createdAt }}</td>
-            <td class="border px-4 py-2">View details</td>
+            <td class="px-4 py-2">
+              <a href="" @click.prevent="selectedOrder = order">View details</a>
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
+    <Order
+      v-else-if="selectedOrder"
+      :order="selectedOrder"
+      @backToList="selectedOrder = null"
+    />
     <div v-else>
       <span>
         No orders so far...
@@ -39,13 +46,15 @@
 
 <script>
 import axios from 'axios'
-
+import Order from '@/components/Order'
 export default {
   name: 'AccountOrders',
+  components: { Order },
   data() {
     return {
       isLoading: true,
       orders: [],
+      selectedOrder: null,
     }
   },
   mounted() {

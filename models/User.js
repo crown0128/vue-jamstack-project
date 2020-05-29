@@ -5,6 +5,7 @@ const UserSchema = new Schema({
   netlifyId: String,
   email: String,
   name: String,
+  username: String,
   phone: String,
   orders: {
     type: [

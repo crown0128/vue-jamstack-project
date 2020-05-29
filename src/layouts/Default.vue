@@ -4,15 +4,17 @@
     <main class="mx-auto mt-5">
       <slot />
     </main>
+    <Footer />
   </div>
 </template>
 
 <script>
+import Footer from './Footer'
 import Header from './Header'
 
 export default {
   name: 'Layout',
-  components: { Header },
+  components: { Footer, Header },
   mounted() {
     let netlifyIdentityScript = document.createElement('script')
     netlifyIdentityScript.setAttribute(

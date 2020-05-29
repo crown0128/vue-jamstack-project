@@ -1,5 +1,5 @@
 <template>
-  <div class="layout flex flex-col min-h-screen">
+  <div class="layout flex flex-col min-h-screen text-limed">
     <Header />
     <main class="mx-auto mt-5 flex-grow">
       <slot />

@@ -1,6 +1,6 @@
 <template>
   <Layout>
-    <modal name="addedToCart">
+    <modal name="addedToCart" transition="fade">
       <div class="px-5 py-5">
         <p class="text-2xl font-semibold pb-3">
           You just added to your cart:
@@ -18,14 +18,16 @@
           </div>
         </div>
         <div class="grid grid-cols-2 mt-3">
-          <a
-            href=""
-            class="text-lg tracking-wide"
-            @click.prevent="$modal.hide('addedToCart')"
-            >&larr; Continue shopping
-          </a>
+          <span>
+            <a
+              href=""
+              class="text-lg transition duration-500 ease-in-out text-limed border-b border-transparent hover:border-coffee hover:text-coffee"
+              @click.prevent="$modal.hide('addedToCart')"
+              >&larr; Continue shopping
+            </a>
+          </span>
           <g-link
-            class="px-4 py-2 leading-none border rounded bg-red-800 text-white hover:bg-red-900 mt-4 lg:mt-0 tracking-wide text-lg"
+            class="px-4 py-2 text-center transition duration-500 ease-in-out leading-none border rounded bg-granny text-white hover:bg-coffee mt-4 lg:mt-0 tracking-wide text-lg"
             to="/cart"
           >
             Go to cart &rarr;
@@ -33,51 +35,108 @@
         </div>
       </div>
     </modal>
-    <g-link to="/products" class="link"> &larr; Go Back</g-link>
-    <section v-if="$page.product">
-      <div class="grid grid-rows-2">
-        <div class="product__main grid grid-cols-2">
-          <img v-img :src="$page.product.image.file.url" />
-          <div class="main__details">
-            <div class="product__title">
-              <h1>{{ $page.product.title }}</h1>
-              <h2>{{ $page.product.artist.name }}</h2>
-              <h3>Options <small class="italic">Coming soon...</small></h3>
-              <p>{{ $page.product.dimensions }}</p>
-              <p>{{ $page.product.price }}€</p>
+    <div class="container">
+      <g-link
+        to="/products"
+        class="transition duration-500 ease-in-out text-limed border-b border-transparent hover:border-coffee hover:text-coffee "
+      >
+        &larr; Go Back</g-link
+      >
+      <section v-if="$page.product">
+        <div class="grid grid-rows-2 text-limed">
+          <div class="product__main grid grid-cols-2 py-2">
+            <img v-img :src="$page.product.image.file.url" class="px-5" />
+            <div class="main__details px-5">
+              <h1 class="text-2xl">{{ $page.product.title }}</h1>
+              <h2 class="text-xl text-granny">
+                {{ $page.product.artist.name }}
+              </h2>
+              <p class="text-gray-500 pb-5">
+                {{ $page.product.dimensions[0].format.name }}
+                <span>{{ formatDimensions($page.product.dimensions[0]) }}</span>
+              </p>
+              <p class="pb-5">
+                Options <small class="italic">Coming soon...</small>
+              </p>
+              <p class="text-xl pb-5 font-bold">{{ $page.product.price }}€</p>
               <button
-                class="px-4 py-2 leading-none border rounded bg-red-800 text-white hover:bg-red-900 mt-4 lg:mt-0"
+                class="px-4 py-2 transition duration-500 ease-in-out leading-none border rounded bg-granny text-white hover:bg-coffee mt-4 lg:mt-0"
                 @click.prevent="addToCart($page.product)"
               >
                 &#43; Add to cart
               </button>
             </div>
           </div>
-        </div>
-        <div class="product__details grid grid-cols-2">
-          <div class="details__product">
-            <p>Description</p>
-            <p>{{ $page.product.description }}</p>
-            <p
-              v-if="
-                $page.product.dominantColors &&
-                  $page.product.dominantColors.length
-              "
-            >
-              {{ $page.product.dominantColors }}
-            </p>
-            <p>{{ $page.product.tags }}</p>
+          <div class="product__details grid grid-cols-2 py-2">
+            <div class="details__product px-5">
+              <p
+                class="text-2xl text-coffee border-b border-coffee mb-3 tracking-widest"
+              >
+                About the artwork
+              </p>
+              <p class="text-justify">{{ $page.product.description }}</p>
+              <div class="grid grid-cols-2">
+                <div
+                  v-if="
+                    $page.product.dominantColors &&
+                      $page.product.dominantColors.length
+                  "
+                  class="pt-5 mr-2"
+                >
+                  <p
+                    class="text-lg text-granny border-b border-granny mb-3 tracking-widest"
+                  >
+                    Dominant colors
+                  </p>
+                  <div class="grid grid-cols-5 sm:grid-cols-3">
+                    <div
+                      class="p-2 sm:col-span-1"
+                      v-for="color in $page.product.dominantColors"
+                      :key="color"
+                    >
+                      <div
+                        v-if="getColorHex(color)"
+                        class="w-8 h-8 rounded-full mx-auto border border-solid border-gray-400 flex items-center justify-center"
+                        :style="{ 'background-color': getColorHex(color) }"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  v-if="$page.product.tags && $page.product.tags.length"
+                  class="pt-5 ml-2"
+                >
+                  <p
+                    class="text-lg text-granny border-b border-granny mb-3 tracking-widest"
+                  >
+                    Keywords
+                  </p>
+                  <div class="grid grid-cols-5 sm:grid-cols-3">
+                    <span
+                      v-for="(tag, index) in $page.product.tags"
+                      :key="index"
+                      class="sm:col-span-1 mb-1 px-2 py-1 mx-auto"
+                      ><span class="text-granny">#</span>{{ tag }}</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="details__artist px-5">
+              <p
+                class="text-2xl text-coffee border-b border-coffee mb-3 tracking-widest"
+              >
+                The photographer
+              </p>
+              <p class="text-justify">
+                {{ $page.product.artist.biography.content[0].content[0].value }}
+              </p>
+              <a href="" @click.prevent>view more...</a>
+            </div>
           </div>
-          <div class="details__artist">
-            <p>Photographer</p>
-            <p>
-              {{ $page.product.artist.biography.content[0].content[0].value }}
-            </p>
-            <a href="" @click.prevent>view more...</a>
-          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   </Layout>
 </template>
 
@@ -120,6 +179,8 @@ query Product ($path: String!) {
 </page-query>
 
 <script>
+import config from '@/config'
+
 export default {
   name: 'Product',
   methods: {
@@ -149,6 +210,15 @@ export default {
 
       localStorage.setItem('cart', JSON.stringify(cart))
       this.$modal.show('addedToCart')
+    },
+    formatDimensions(dimensions) {
+      return `${dimensions.width}x${dimensions.height}`
+    },
+    getColorHex(colorName) {
+      const color = config.DOMINANT_COLORS.find(
+        (color) => color.name === colorName
+      )
+      return color ? color.hex : null
     },
   },
 }

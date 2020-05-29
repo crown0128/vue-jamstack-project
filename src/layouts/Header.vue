@@ -66,15 +66,42 @@
             </span>
           </template>
           <template v-slot:content>
-            <li v-if="isLoggedIn" class="dropdown__item">
-              <g-link to="/account">My account</g-link>
-            </li>
-            <li v-if="isLoggedIn" class="dropdown__item">
-              <g-link to="/account/orders">
-                Orders
-              </g-link>
-            </li>
-            <div id="netlify-login" data-netlify-identity-menu></div>
+            <div v-if="isLoggedIn">
+              <li class="dropdown__item">
+                <g-link to="/account">My account</g-link>
+              </li>
+              <li class="dropdown__item">
+                <g-link to="/account/orders">
+                  Orders
+                </g-link>
+              </li>
+              <li class="dropdown__item">
+                <a
+                  href="#"
+                  @click.prevent="triggerNetlifyIdentityAction('logout')"
+                >
+                  Log out
+                </a>
+              </li>
+            </div>
+            <div v-else>
+              <li class="dropdown__item">
+                <a
+                  href="#"
+                  @click.prevent="triggerNetlifyIdentityAction('signup')"
+                >
+                  Sign up
+                </a>
+              </li>
+              <li class="dropdown__item">
+                <a
+                  href="#"
+                  @click.prevent="triggerNetlifyIdentityAction('login')"
+                >
+                  Log In
+                </a>
+              </li>
+            </div>
           </template>
         </Dropdown>
         <div>
@@ -112,7 +139,12 @@ query {
 
 <script>
 import Dropdown from '@/components/Dropdown'
+import netlifyIdentity from 'netlify-identity-widget'
 
+netlifyIdentity.init({
+  APIUrl: 'https://vue-jamstack-nao.netlify.app/.netlify/identity',
+  logo: false,
+})
 export default {
   name: 'Header',
   components: {
@@ -125,6 +157,20 @@ export default {
   },
   mounted() {
     this.isLoggedIn = localStorage && localStorage.getItem('gotrue.user')
+  },
+  methods: {
+    triggerNetlifyIdentityAction(action) {
+      if (action === 'login' || action === 'signup') {
+        netlifyIdentity.open(action)
+        netlifyIdentity.on(action, (user) => {
+          netlifyIdentity.close()
+          this.isLoggedIn = true
+        })
+      } else if (action === 'logout') {
+        netlifyIdentity.logout()
+        this.isLoggedIn = false
+      }
+    },
   },
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
-  <div class="layout">
+  <div class="layout flex flex-col min-h-screen">
     <Header />
-    <main class="mx-auto mt-5">
+    <main class="mx-auto mt-5 flex-grow">
       <slot />
     </main>
     <Footer />
@@ -15,14 +15,6 @@ import Header from './Header'
 export default {
   name: 'Layout',
   components: { Footer, Header },
-  mounted() {
-    let netlifyIdentityScript = document.createElement('script')
-    netlifyIdentityScript.setAttribute(
-      'src',
-      'https://identity.netlify.com/v1/netlify-identity-widget.js'
-    )
-    document.head.appendChild(netlifyIdentityScript)
-  },
 }
 </script>
 

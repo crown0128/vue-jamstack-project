@@ -27,14 +27,14 @@
             >Colors
             <span
               v-if="filters.isBlackAndWhite || filters.dominantColors.length"
-              class="bg-red-800 p-1 rounded text-white text-xs ml-2 px-2"
+              class="bg-granny p-1 rounded text-white text-xs ml-2 px-2"
               >{{
                 filters.isBlackAndWhite ? 1 : filters.dominantColors.length
               }}</span
             >
           </label>
           <div
-            class="tab__content overflow-hidden border-l-2 bg-gray-100 border-red-700 leading-normal"
+            class="tab__content overflow-hidden border-l-2 bg-gray-100 border-forest leading-normal"
           >
             <div class="p-5 z-0">
               <Checkbox
@@ -59,6 +59,7 @@
                     <label :for="`color-${color.name}`">
                       <div
                         class="w-8 h-8 rounded-full mx-auto border-2 border-solid border-gray-400 flex items-center justify-center"
+                        :class="{ 'opacity-50': filters.isBlackAndWhite }"
                         :style="{ 'background-color': color.hex }"
                       >
                         <svg
@@ -92,6 +93,7 @@
                           </g>
                         </svg>
                       </div>
+
                       <p>{{ color.name }}</p>
                     </label>
                   </div>
@@ -114,12 +116,12 @@
             >Format
             <span
               v-if="filters.orientations.length"
-              class="bg-red-800 p-1 rounded text-white text-xs ml-2 px-2"
+              class="bg-forest p-1 rounded text-white text-xs ml-2 px-2"
               >{{ filters.orientations.length }}</span
             ></label
           >
           <div
-            class="tab__content overflow-hidden border-l-2 bg-gray-100 border-red-700 leading-normal"
+            class="tab__content overflow-hidden border-l-2 bg-gray-100 border-forest leading-normal"
           >
             <div class="p-5">
               <div class="flex items-center">
@@ -141,7 +143,7 @@
                       :class="[
                         `w-${format.width} h-${format.height}`,
                         filters.orientations.includes(format.name)
-                          ? 'border-red-800'
+                          ? 'border-forest'
                           : '',
                       ]"
                     ></div>
@@ -171,7 +173,7 @@
             >
           </label>
           <div
-            class="tab__content overflow-hidden border-l-2 bg-gray-100 border-red-700 leading-normal"
+            class="tab__content overflow-hidden border-l-2 bg-gray-100 border-forest leading-normal"
           >
             <p class="p-5">
               <Checkbox
@@ -206,13 +208,13 @@
             <small>
               <span
                 v-if="filters.keywords.length"
-                class="bg-red-800 p-1 rounded text-white text-xs ml-2 px-2"
+                class="bg-forest p-1 rounded text-white text-xs ml-2 px-2"
                 >{{ filters.keywords.length }}</span
               >
             </small>
           </label>
           <div
-            class="tab__content overflow-hidden border-l-2 bg-gray-100 border-red-700 leading-normal"
+            class="tab__content overflow-hidden border-l-2 bg-gray-100 border-forest leading-normal"
           >
             <div class="p-5">
               <TagsInput @update="updateFilters($event, 'keywords')" />
@@ -223,7 +225,7 @@
     </div>
     <button
       v-if="isFiltered"
-      class="bg-red-800 hover:bg-red-900 text-white font-bold py-2 px-4 rounded mt-3"
+      class="bg-forest hover:bg-limed text-white font-bold py-2 px-4 rounded mt-3"
       @click.prevent="resetFilters"
     >
       Reset
@@ -441,9 +443,9 @@ export default {
   font-size: 1.25rem; /*.text-xl*/
   padding: 1.25rem; /*.p-5*/
   border-left-width: 2px; /*.border-l-2*/
-  border-color: #c53030; /*.border-red*/
+  border-color: #233c3c; /*.border-red*/
   background-color: #f8fafc; /*.bg-gray-100 */
-  color: #c53030; /*.text-indigo*/
+  color: #233c3c; /*.text-indigo*/
 }
 /* Icon */
 .tab > label::after {
@@ -471,7 +473,7 @@ export default {
 /* Icon formatting - open */
 .tab > input[type='radio']:checked + label::after {
   transform: rotateX(180deg);
-  background-color: #9b2c2c; /*.bg-red*/
+  background-color: #233c3c; /*.bg-red*/
   color: #f8fafc; /*.text-grey-lightest*/
 }
 </style>

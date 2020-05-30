@@ -6,32 +6,43 @@
         <h1 class="text-4xl antialiased font-medium text-center pb-6">
           All Photographs
         </h1>
-        <template v-if="filteredList && filteredList.length">
-          <paginate
-            name="products"
-            :list="filteredList"
-            :container="this"
-            :per="4"
-          >
-            <ul
-              class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"
+        <transition tag="div" name="fade" mode="out-in">
+          <div v-if="filteredList && filteredList.length" key="list">
+            <paginate
+              tag="div"
+              name="products"
+              :list="filteredList"
+              :container="this"
+              :per="4"
             >
-              <li v-for="item in paginated('products')" :key="item.node.id">
-                <Item :item="item.node" />
-              </li>
-            </ul>
-          </paginate>
-          <PaginationLinks
-            :container="{
-              state: paginate.products,
-              el: $refs.layout,
-            }"
-            paginateName="products"
-          />
-        </template>
-        <p v-else class="text-xl antialiased font-medium text-center pt-6">
-          No photographs to show...
-        </p>
+              <ul
+                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"
+              >
+                <li
+                  v-for="item in paginated('products')"
+                  :key="item.node.id"
+                  class="product__item"
+                >
+                  <Item :item="item.node" />
+                </li>
+              </ul>
+            </paginate>
+            <PaginationLinks
+              :container="{
+                state: paginate.products,
+                el: $refs.layout,
+              }"
+              paginateName="products"
+            />
+          </div>
+          <p
+            v-else
+            class="text-xl antialiased font-medium text-center pt-6"
+            key="empty"
+          >
+            No photographs to show...
+          </p>
+        </transition>
       </div>
     </section>
   </Layout>
@@ -172,5 +183,8 @@ export default {
 <style lang="css" scoped>
 .products {
   margin: 15px;
+}
+.products__item {
+  transition: all 1s;
 }
 </style>

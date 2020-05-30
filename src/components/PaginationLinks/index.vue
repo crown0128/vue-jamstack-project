@@ -48,7 +48,7 @@ export default {
   li.active {
     a {
       color: #fff;
-      background-color: #9b2c2c;
+      background-color: #8f7056;
     }
   }
 

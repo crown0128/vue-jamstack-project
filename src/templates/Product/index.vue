@@ -27,7 +27,7 @@
             </a>
           </span>
           <g-link
-            class="px-4 py-2 text-center transition duration-500 ease-in-out leading-none border rounded bg-granny text-white hover:bg-coffee mt-4 lg:mt-0 tracking-wide text-lg"
+            class="px-4 py-2 text-center transition duration-500 ease-in-out tracking-wider leading-none border rounded bg-coffee text-white hover:bg-dark-coffee mt-4 lg:mt-0 tracking-wide text-lg"
             to="/cart"
           >
             Go to cart &rarr;
@@ -35,10 +35,10 @@
         </div>
       </div>
     </modal>
-    <div class="container">
+    <div class="container mx-auto">
       <g-link
         to="/products"
-        class="transition duration-500 ease-in-out text-limed border-b border-transparent hover:border-coffee hover:text-coffee "
+        class="transition duration-500 ease-in-out text-limed tracking-wider border-b border-transparent hover:border-coffee hover:text-coffee "
       >
         &larr; Go Back</g-link
       >
@@ -60,7 +60,7 @@
               </p>
               <p class="text-xl pb-5 font-bold">{{ $page.product.price }}€</p>
               <button
-                class="px-4 py-2 transition duration-500 ease-in-out leading-none border rounded bg-granny text-white hover:bg-coffee mt-4 lg:mt-0"
+                class="px-4 py-2 transition duration-500 ease-in-out tracking-wider leading-none border rounded bg-coffee text-white hover:bg-dark-coffee mt-4 lg:mt-0"
                 @click.prevent="addToCart($page.product)"
               >
                 &#43; Add to cart

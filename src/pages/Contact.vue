@@ -12,10 +12,11 @@
           <form
             name="contact"
             method="post"
-            action="/success/"
+            action="/success"
             data-netlify="true"
             class="bg-white rounded px-8 pt-6 pb-8 mb-4"
           >
+            <input type="hidden" name="form-name" value="contact" />
             <div class="mb-4">
               <label for="name" class="block mb-2">Your name</label>
               <input

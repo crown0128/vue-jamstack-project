@@ -1,9 +1,11 @@
 <template>
   <Layout ref="layout">
-    <section class="flex w-full">
+    <section class="flex w-full mb-16">
       <Sidebar class="sm:w-1/3 lg:w-1/5 w-full" @updateList="updateList" />
       <div class="products sm:w-2/3 lg:w-4/5 w-full">
-        <h1 class="text-4xl antialiased font-medium text-center pb-6">
+        <h1
+          class="text-4xl antialiased text-coffee tracking-widest border-b border-coffee text-center mb-10"
+        >
           All Photographs
         </h1>
         <transition tag="div" name="fade" mode="out-in">
@@ -11,6 +13,7 @@
             <paginate
               tag="div"
               name="products"
+              class="mb-16"
               :list="filteredList"
               :container="this"
               :per="4"

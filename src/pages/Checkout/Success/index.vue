@@ -1,39 +1,48 @@
 <template>
   <Layout>
-    <div class="grid grid-cols-3">
-      <div v-if="order && order.items.length" class="col-start-2 col-span-1">
-        <h1 class="text-3xl font-semibold text-center">Thank you!</h1>
-        <h2 class="text-center">Order summary</h2>
-        <h3>Ref: {{ order.ref }}</h3>
+    <div class="container mx-auto mb-20">
+      <div v-if="order && order.items.length">
+        <h1
+          class="text-4xl text-coffee border-b border-coffee mb-3 tracking-widest text-center mx-auto"
+        >
+          Thank you!
+        </h1>
+        <h2
+          class="text-2xl text-granny mb-3 tracking-widest text-center mx-auto"
+        >
+          Order summary
+        </h2>
+        <h3 class="text-lg font-semibold text-center">
+          Reference: #{{ order.ref.toUpperCase() }}
+        </h3>
         <div
           v-for="item in order.items"
           :key="item.id"
-          class="grid grid-cols-6 mt-5"
+          class="grid grid-cols-6 my-5 items-center"
         >
-          <img
-            :src="item.image"
-            :alt="item.title"
-            width="200"
-            class="col-span-2"
-          />
-          <p class="col-span-2 pl-3">
+          <div class="mx-auto col-span-2">
+            <img :src="item.image" :alt="item.title" width="200" />
+          </div>
+          <p class="col-span-2 pl-3 text-lg  text-center">
             {{ item.title }} <br />
             <small>{{ item.artist }}</small>
           </p>
 
           <p class="col-auto text-right">x{{ item.quantity }}</p>
-          <p class="col-auto text-right">{{ item.quantity * item.price }}€</p>
+          <p class="col-auto text-lg font-semibold text-right">
+            {{ item.quantity * item.price }}€
+          </p>
         </div>
         <div class=" grid grid-rows-2">
-          <p class="text-right text-lg font-medium">
+          <p class="text-right text-lg tracking-wide font-semibold">
             Total: {{ getTotalPrice(order.items) }}€
           </p>
-          <div class="text-center mt-4">
+          <div class="w-full text-center mt-10">
             <g-link
-              class="px-4 py-2 leading-none border rounded bg-red-800 text-white hover:bg-red-900 mt-4 lg:mt-0"
+              class="px-4 py-2 text-center transition duration-500 ease-in-out tracking-wider leading-none border rounded bg-coffee text-white hover:bg-dark-coffee mt-4 lg:mt-0 tracking-wide text-lg"
               to="/products"
             >
-              See more artworks
+              Browse more artworks
             </g-link>
           </div>
         </div>

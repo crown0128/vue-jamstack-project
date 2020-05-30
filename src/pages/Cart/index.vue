@@ -1,44 +1,86 @@
 <template>
   <Layout>
-    <div class="m-20 px-5">
-      <h1 class="text-2xl">Cart</h1>
+    <div class="container mx-auto mb-20">
+      <h1
+        class="text-4xl text-coffee border-b border-coffee mb-3 tracking-widest text-center mx-auto"
+      >
+        Cart
+      </h1>
       <div v-if="cart && cart.length">
         <div
           v-for="item in cart"
           :key="item.id"
-          class="grid grid-cols-4 mx-5 px-5 py-3 "
+          class="grid grid-cols-4 mx-5 px-5 py-3 text-center items-center"
         >
-          <g-link :to="`/products/${item.slug}`">
+          <g-link :to="`/products/${item.slug}`" class="mx-auto">
             <img :src="item.image" :alt="item.title" width="200" />
           </g-link>
           <g-link :to="`/products/${item.slug}`">
-            <p>{{ item.title }}</p>
+            <p class="text-xl">{{ item.title }}</p>
             <p>
-              <small>{{ item.artist }}</small>
+              {{ item.artist }}
             </p>
           </g-link>
           <div>
             <p>Quantity</p>
-            <input type="number" min="1" v-model="item.quantity" />
+            <div
+              class="flex flex-row h-10 w-32 rounded-lg relative bg-transparent mt-1 mx-auto"
+            >
+              <button
+                @click.prevent="item.quantity > 1 ? item.quantity-- : null"
+                class=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
+              >
+                <span class="m-auto text-2xl font-thin">−</span>
+              </button>
+              <input
+                type="number"
+                class="outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center outline-none"
+                min="1"
+                v-model="item.quantity"
+              />
+              <button
+                @click.prevent="item.quantity++"
+                class="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer"
+              >
+                <span class="m-auto text-2xl font-thin">+</span>
+              </button>
+            </div>
             <p>
               <a
                 href=""
                 @click.prevent="removeItem(item.id)"
-                class="text-red-800 hover:text-red-900"
+                class="text-coffee hover:text-dark-coffee"
                 >Remove</a
               >
             </p>
           </div>
-          <p>{{ getItemPrice(item.quantity, item.price) }}€</p>
+          <p class="text-lg font-semibold">
+            {{ getItemPrice(item.quantity, item.price) }}€
+          </p>
         </div>
         <div class="text-right">
-          <p>{{ getTotalPrice(cart) }}€</p>
+          <p class="text-xl font-semibold tracking-wide mb-5">
+            Total: <span class="text-2xl pl-2">{{ getTotalPrice(cart) }}€</span>
+          </p>
           <button
-            class="px-4 py-2 leading-none border rounded bg-red-800 text-white hover:bg-red-900 mt-4 lg:mt-0"
+            class="px-4 py-2 text-center transition duration-500 ease-in-out tracking-wider leading-none border rounded bg-coffee text-white hover:bg-dark-coffee mt-4 lg:mt-0 tracking-wide text-lg"
             @click.prevent="goToCheckout(cart)"
           >
             Checkout
           </button>
+        </div>
+      </div>
+      <div v-else>
+        <p class="text-center text-xl italic">
+          You don't have anything in your cart yet...
+        </p>
+        <div class="w-full text-center mt-10">
+          <g-link
+            class="px-4 py-2 text-center transition duration-500 ease-in-out tracking-wider leading-none border rounded bg-coffee text-white hover:bg-dark-coffee mt-4 lg:mt-0 tracking-wide text-lg"
+            to="/products"
+          >
+            Browse our artworks
+          </g-link>
         </div>
       </div>
     </div>
@@ -108,4 +150,12 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+</style>

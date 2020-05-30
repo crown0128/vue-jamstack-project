@@ -42,13 +42,12 @@ export default {
     a {
       padding: 8px 16px;
       transition: background-color 0.3s;
-      border: 1px solid #ddd;
     }
   }
   li.active {
     a {
-      color: #fff;
-      background-color: #8f7056;
+      color: #8f7056;
+      border-bottom: solid 1px #8f7056;
     }
   }
 

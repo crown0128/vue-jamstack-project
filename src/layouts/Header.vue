@@ -141,10 +141,6 @@ query {
 import Dropdown from '@/components/Dropdown'
 import netlifyIdentity from 'netlify-identity-widget'
 
-netlifyIdentity.init({
-  APIUrl: 'https://vue-jamstack-nao.netlify.app/.netlify/identity',
-  logo: false,
-})
 export default {
   name: 'Header',
   components: {
@@ -156,6 +152,10 @@ export default {
     }
   },
   mounted() {
+    netlifyIdentity.init({
+      APIUrl: 'https://vue-jamstack-nao.netlify.app/.netlify/identity',
+      logo: false,
+    })
     this.isLoggedIn = localStorage && localStorage.getItem('gotrue.user')
   },
   methods: {

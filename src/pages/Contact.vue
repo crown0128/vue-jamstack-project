@@ -44,7 +44,7 @@
             <div class="flex text-right justify-between">
               <button
                 class="transition duration-500 ease-in-out bg-coffee hover:bg-dark-coffee text-white tracking-wider py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                type="button"
+                type="submit"
               >
                 Send
               </button>

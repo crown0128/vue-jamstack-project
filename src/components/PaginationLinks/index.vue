@@ -1,6 +1,6 @@
 <template>
   <paginate-links
-    for="products"
+    :for="paginateName"
     :limit="limit"
     :show-step-links="showStepLinks"
     :container="container"

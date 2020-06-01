@@ -36,6 +36,12 @@ module.exports = {
     },
   ],
   templates: {
+    ContentfulBlogPost: [
+      {
+        path: '/blog/:slug',
+        component: './src/templates/BlogPost/index.vue',
+      },
+    ],
     ContentfulProduct: [
       {
         path: '/products/:slug',

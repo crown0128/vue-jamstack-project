@@ -7,6 +7,8 @@
     "explore": "gridsome explore"
   },
   "dependencies": {
+    "@contentful/rich-text-html-renderer": "^13.4.0",
+    "@contentful/rich-text-types": "^14.1.0",
     "@gridsome/source-contentful": "^0.5.2",
     "@gridsome/source-filesystem": "^0.6.2",
     "@gridsome/transformer-remark": "^0.5.0",

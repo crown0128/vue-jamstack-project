@@ -17,6 +17,7 @@
     "axios": "^0.19.2",
     "contentful": "^7.14.4",
     "contentful-management": "^5.26.1",
+    "dayjs": "^1.8.28",
     "dotenv": "^8.2.0",
     "gridsome": "^0.7.0",
     "gridsome-plugin-modal": "^0.1.1",

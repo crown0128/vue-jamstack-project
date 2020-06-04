@@ -80,9 +80,14 @@ exports.handler = async (event, context, callback) => {
         }
       }
     }
+
     return {
       statusCode: 200,
-      body: JSON.stringify(orders),
+      body: JSON.stringify(
+        orders.sort((a, b) => {
+          return b.createdAt - a.createdAt
+        })
+      ),
     }
   } catch (error) {
     console.error("Error while getting user's orders from DB", error)

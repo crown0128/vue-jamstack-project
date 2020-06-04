@@ -7,7 +7,7 @@
         <h1 class="text-4xl antialiased text-limed tracking-wide">{{ $page.blogPost.title }}</h1>
         <p class="text-xl antialiased text-granny tracking-wide"></p>
         <div class="flex flex-row mb-3">
-          <p class="antialiased text-coffee w-full sm:w-1/2"><span class="mr-2 ">by {{ $page.blogPost.author }}</span> | <span class="ml-2">{{ $page.blogPost.date }}</span></p>
+          <p class="antialiased text-coffee w-full sm:w-1/2"><span class="mr-2 ">by {{ $page.blogPost.author }}</span> | <span class="ml-2">{{ formattedDate }}</span></p>
           <div class="w-full sm:w-1/2 text-right">
             <span v-for="tag of $page.blogPost.tags" :key="tag" class="text-xs font-semibold text-granny pr-2">#{{ tag.toUpperCase() }}</span>
 
@@ -44,9 +44,15 @@ query BlogPost ($path: String!) {
 <script>
 import { documentToHtmlString } from "@contentful/rich-text-html-renderer";
 import { BLOCKS } from "@contentful/rich-text-types";
+import dayjs from "dayjs";
 
 export default {
   name: "BlogPost",
+  computed: {
+    formattedDate() {
+      return dayjs(this.$page.blogPost.date).format("MMM DD, YYYY HH:mm A");
+    }
+  },
   methods: {
     richtextToHTML(content) {
       return documentToHtmlString(content, {

@@ -17,7 +17,7 @@
         <div>
         </div>
       </div>
-      <div class="mt-10 mb-20" v-html="richtextToHTML($page.blogPost.content)"></div>
+      <div class="post__content mt-10 mb-20" v-html="richtextToHTML($page.blogPost.content)"></div>
     </div>
   </Layout>
 </template>
@@ -67,8 +67,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-/deep/ img {
+<style lang="scss">
+.post__content /deep/ img {
   display: block;
   margin: 50px auto !important;
   max-width: 800px;

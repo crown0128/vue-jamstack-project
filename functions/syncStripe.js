@@ -9,32 +9,34 @@ exports.handler = async function(event, context, callback) {
 
     // If the sync is triggered by the API, ignore it to avoid an infinite loop
     if (payload.fields.updatedByApi) {
-      callback(null, {
+      return {
         statusCode: 200,
         body: JSON.stringify('No synchronization needed.'),
-      })
+      }
     }
     switch (payload.sys.type) {
+      // 'Entry' means creation or update of a product
       case 'Entry':
         payload.fields.id = payload.sys.id
         await upsertProduct(payload.fields)
         break
+      // 'DeleteEntry' means deletion of a product
       case 'DeleteEntry':
-        await deleteProduct(payload.sys.id)
+        await Stripe.products.del(payload.sys.id)
         break
       default:
         break
     }
-    callback(null, {
+    return {
       statusCode: 200,
       body: JSON.stringify('Synchronized with Stripe !'),
-    })
+    }
   } catch (error) {
     console.error('Error while synchronizing product with Stripe', error)
-    callback(null, {
+    return {
       statusCode: 500,
       body: JSON.stringify(error),
-    })
+    }
   }
 }
 
@@ -50,18 +52,35 @@ const upsertProduct = async (product) => {
 }
 
 const updateProduct = async (product, contentfulClient) => {
-  /**
-   *  @TODO update if:
-   * - name is different
-   * - slug is different
-   * - description is different
-   * - new formats available
-   *    - Get SKUs
-   *        - check attributes value (update )
-   */
+  const contentfulSpace = await contentfulClient.getSpace(
+    process.env.GRIDSOME_CONTENTFUL_SPACE
+  )
+  const entry = await contentfulSpace.getEntry(product.id)
 
-  console.log('UPDATE PRODUCT')
-  return
+  // If the product does not have a Stripe Price yet, let's create it
+  if (!product.stripePriceId) {
+    const stripePrice = await Stripe.prices.create({
+      unit_amount: product.price['en-US'] * 100,
+      currency: 'eur',
+      product: product.stripeId['en-US'],
+    })
+    entry.fields.stripePriceId = { 'en-US': stripePrice.id }
+  }
+
+  // Update product in Stripe
+  await Stripe.products.update(product.stripeId['en-US'], {
+    name: product.name['en-US'],
+    description: product.description['en-US'],
+    metadata: {
+      contentfulId: product.id,
+      slug: product.slug['en-US'],
+    },
+  })
+
+  // This field is important to avoid infinite loop when 'publish' event is detected
+  entry.fields.updatedByApi = { 'en-US': true }
+  const updatedEntry = await entry.update()
+  await updatedEntry.publish()
 }
 
 const createProduct = async (product, contentfulClient) => {
@@ -74,41 +93,25 @@ const createProduct = async (product, contentfulClient) => {
     name: product.name['en-US'],
     type: 'good',
     description: product.description['en-US'],
-    attributes: ['name', 'format'],
     metadata: {
       contentfulId: product.id,
       slug: product.slug['en-US'],
     },
   })
 
-  // Create new SKU for this product
-  const dimensionId = product.dimensions['en-US'][0].sys.id
-  const dimensionEntry = await contentfulSpace.getEntry(dimensionId)
-  const SKU = await Stripe.skus.create({
-    attributes: {
-      // Static for now, will be dynamic format once options are available
-      name: dimensionEntry.fields.name['en-US'],
-      format: 'classic',
-    },
-    // Price in cents
-    price: product.price['en-US'] * 100,
+  // 2. Create new price for this product
+  const stripePrice = await Stripe.prices.create({
+    unit_amount: product.price['en-US'] * 100,
     currency: 'eur',
-    // Checkout only allows sku with infinite inventory
-    inventory: { type: 'infinite' },
     product: stripeProduct.id,
   })
 
   // 3. Update the product on  Contentful with the Stripe info (id, sku id, quantity)
   const entry = await contentfulSpace.getEntry(product.id)
   entry.fields.stripeId = { 'en-US': stripeProduct.id }
-  entry.fields.sku = { 'en-US': SKU.id }
+  entry.fields.stripePriceId = { 'en-US': stripePrice.id }
+  // This field is important to avoid infinite loop when 'publish' event is detected
   entry.fields.updatedByApi = { 'en-US': true }
   const updatedEntry = await entry.update()
   await updatedEntry.publish()
-}
-
-const deleteProduct = async (productId) => {
-  // @TODO delete SKUs then product
-  console.log('DELETE PRODUCT')
-  return
 }

@@ -20,7 +20,7 @@
                     <g-link :to="item.node.path">
                       <p class="text-xl">{{ item.node.title }}</p>
                     </g-link>
-                    <p class="text-coffee text-xs">{{ item.node.date }}</p>
+                    <p class="text-coffee text-xs">{{ formatDate(item.node.date) }}</p>
                     <div class="relative ">
                       <button class="bg-coffee hover:bg-dark-coffee text-white float-right py-2 px-4 rounded flex mr-2 mb-2">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
@@ -72,6 +72,7 @@ blogPosts: allContentfulBlogPost(sortBy: "date", order: DESC) {
 <script>
 import PaginationLinks from "@/components/PaginationLinks";
 import { documentToHtmlString } from "@contentful/rich-text-html-renderer";
+import dayjs from "dayjs";
 
 export default {
   name: "Blog",
@@ -82,7 +83,10 @@ export default {
     };
   },
   methods: {
-    documentToHtmlString
+    documentToHtmlString,
+    formatDate(date) {
+      return dayjs(date).format("MMM DD, YYYY");
+    }
   }
 };
 </script>

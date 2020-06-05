@@ -50,7 +50,7 @@ export default {
   name: "BlogPost",
   computed: {
     formattedDate() {
-      return dayjs(this.$page.blogPost.date).format("MMM DD, YYYY HH:mm A");
+      return dayjs(this.$page.blogPost.date).format("MMM DD, YYYY");
     }
   },
   methods: {

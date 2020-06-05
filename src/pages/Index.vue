@@ -6,7 +6,7 @@
           <h1 class="text-4xl antialiased text-coffee tracking-widest border-b border-coffee text-center mb-10">
             Latest artworks
           </h1>
-          <Carousel :centerMode="true" paginationActiveColor="#785e48" paginationColor="#d5cac4" paginationPosition="bottom-overlay" :paginationSize="12" :navigationEnabled="true" :autoplayTimeout="4000" v-if="carouselItems.length">
+          <Carousel :centerMode="true" paginationActiveColor="#785e48" paginationColor="#d5cac4" :paginationSize="12" :navigationEnabled="true" :autoplayTimeout="4000" v-if="carouselItems.length">
             <Slide v-for="item of carouselItems" :key="item.id" class="h-54">
               <g-link :to="item.node.path">
                 <img class="slide__image px-3" :src="item.node.image.file.url" />
@@ -36,7 +36,7 @@
                 </p>
               </div>
               <button class="w-1/3 transition duration-500 ease-in-out bg-coffee hover:bg-dark-coffee text-white tracking-wider py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" :disabled="isLoading">
-                Send
+                Subscribe
               </button>
             </div>
           </form>

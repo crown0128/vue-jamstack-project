@@ -2,24 +2,16 @@
   <Layout>
     <div class="container mx-auto mb-20">
       <div v-if="order && order.items.length">
-        <h1
-          class="text-4xl text-coffee border-b border-coffee mb-3 tracking-widest text-center mx-auto"
-        >
+        <h1 class="text-4xl text-coffee border-b border-coffee mb-3 tracking-widest text-center mx-auto">
           Thank you!
         </h1>
-        <h2
-          class="text-2xl text-granny mb-3 tracking-widest text-center mx-auto"
-        >
+        <h2 class="text-2xl text-granny mb-3 tracking-widest text-center mx-auto">
           Order summary
         </h2>
         <h3 class="text-lg font-semibold text-center">
           Reference: #{{ order.ref.toUpperCase() }}
         </h3>
-        <div
-          v-for="item in order.items"
-          :key="item.id"
-          class="grid grid-cols-6 my-5 items-center"
-        >
+        <div v-for="item in order.items" :key="item.id" class="grid grid-cols-6 my-5 items-center">
           <div class="mx-auto col-span-2">
             <img :src="item.image" :alt="item.title" width="200" />
           </div>
@@ -38,10 +30,7 @@
             Total: {{ getTotalPrice(order.items) }}€
           </p>
           <div class="w-full text-center mt-10">
-            <g-link
-              class="px-4 py-2 text-center transition duration-500 ease-in-out tracking-wider leading-none border rounded bg-coffee text-white hover:bg-dark-coffee mt-4 lg:mt-0 tracking-wide text-lg"
-              to="/products"
-            >
+            <g-link class="px-4 py-2 text-center transition duration-500 ease-in-out tracking-wider leading-none border rounded bg-coffee text-white hover:bg-dark-coffee mt-4 lg:mt-0 tracking-wide text-lg" to="/products">
               Browse more artworks
             </g-link>
           </div>
@@ -52,71 +41,72 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
 
 export default {
-  name: 'CheckoutSuccess',
+  name: "CheckoutSuccess",
   data() {
     return {
-      order: { ref: '', items: [] },
-    }
+      order: { ref: "", items: [] }
+    };
   },
   mounted() {
-    if (sessionStorage.getItem('order') && !localStorage.getItem('cart')) {
-      this.order = JSON.parse(sessionStorage.getItem('order'))
-      return
+    if (sessionStorage.getItem("order") && !localStorage.getItem("cart")) {
+      this.order = JSON.parse(sessionStorage.getItem("order"));
+      return;
     }
     this.order.items =
-      (localStorage.getItem('cart') &&
-        JSON.parse(localStorage.getItem('cart'))) ||
-      []
+      (localStorage.getItem("cart") &&
+        JSON.parse(localStorage.getItem("cart"))) ||
+      [];
     this.order.ref = Math.random()
       .toString(36)
-      .substr(2)
-    sessionStorage.setItem('order', JSON.stringify(this.order))
-    localStorage.removeItem('cart')
+      .substr(2);
+    sessionStorage.setItem("order", JSON.stringify(this.order));
+    localStorage.removeItem("cart");
 
-    this.saveOrder(this.order)
+    this.saveOrder(this.order);
   },
   methods: {
     getTotalPrice(items) {
       return items.reduce(function(prev, cur) {
-        return prev + cur.price * cur.quantity
-      }, 0)
+        return prev + cur.price * cur.quantity;
+      }, 0);
     },
     saveOrder(order) {
       const user =
-        localStorage.getItem('gotrue.user') &&
-        JSON.parse(localStorage.getItem('gotrue.user'))
+        localStorage.getItem("gotrue.user") &&
+        JSON.parse(localStorage.getItem("gotrue.user"));
 
       if (!user || !user.id) {
-        return
+        return;
       }
-      const items = order.items.map((item) => {
+      const items = order.items.map(item => {
         return {
           productId: item.id,
           quantity: item.quantity,
           price: item.price,
-        }
-      })
+          inventoryId: item.inventoryId
+        };
+      });
 
       const formattedOrder = {
         ref: order.ref,
         items,
         total: this.getTotalPrice(order.items),
-        userId: user.id,
-      }
+        userId: user.id
+      };
 
       axios
         .post(`${process.env.GRIDSOME_API_URL}/saveUserOrder`, {
-          order: formattedOrder,
+          order: formattedOrder
         })
-        .catch((error) => {
+        .catch(error => {
           // handle error
           // @TODO display error message
-          console.log(error)
-        })
-    },
-  },
-}
+          console.log(error);
+        });
+    }
+  }
+};
 </script>

@@ -30,7 +30,7 @@
         <span>
           No orders so far...
         </span>
-        <div class="text-center mt-4">
+        <div v-if="!isLoading" class="text-center mt-4">
           <g-link class="px-4 py-2 leading-none border rounded bg-red-800 text-white hover:bg-red-900 mt-4 lg:mt-0" to="/products">
             Check our artworks
           </g-link>

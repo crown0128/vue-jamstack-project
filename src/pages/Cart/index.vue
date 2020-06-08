@@ -68,6 +68,7 @@
 <script>
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
+import Bus from "@/Bus";
 
 export default {
   name: "Cart",
@@ -90,6 +91,8 @@ export default {
     cart: {
       deep: true,
       handler() {
+        localStorage.setItem("cart", JSON.stringify(this.cart));
+        Bus.$emit("updateNbCartItems");
         this.updateInventoryErrors(this.cart);
       }
     }
@@ -121,7 +124,6 @@ export default {
         .catch(error => console.log(error));
     },
     getItemPrice(quantity, price) {
-      localStorage.setItem("cart", JSON.stringify(this.cart));
       return quantity * price;
     },
     getTotalPrice(cart) {

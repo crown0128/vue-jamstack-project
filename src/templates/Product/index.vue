@@ -156,6 +156,7 @@ query Product ($path: String!) {
 
 <script>
 import config from "@/config";
+import Bus from "@/Bus";
 
 export default {
   name: "Product",
@@ -186,6 +187,7 @@ export default {
       }
 
       localStorage.setItem("cart", JSON.stringify(cart));
+      Bus.$emit("updateNbCartItems");
       this.$modal.show("addedToCart");
     },
     formatDimensions(dimensions) {

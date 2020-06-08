@@ -1,6 +1,7 @@
 <template>
   <Layout>
-    <div class="container mx-auto mb-20">
+    <div class="container mx-auto mb-20 relative">
+      <Loader v-if="isLoading" />
       <h1 class="text-4xl text-coffee border-b border-coffee mb-3 tracking-widest text-center mx-auto">My info</h1>
       <div class="grid grid-rows-2">
         <form name="infoUpdate" method="post" @submit.prevent="updateUserInfo" class="bg-white rounded px-8 pt-6 pb-8 mb-4">
@@ -37,9 +38,13 @@
 <script>
 import axios from "axios";
 import netlifyIdentity from "netlify-identity-widget";
+import Loader from "@/components/Loader";
 
 export default {
   name: "Account",
+  components: {
+    Loader
+  },
   data() {
     return {
       errorMessage: null,

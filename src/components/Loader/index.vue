@@ -1,5 +1,5 @@
 <template>
-  <div class="loader absolute inset-0 flex items-center justify-center bg-gray-100">
+  <div class="loader absolute z-40 inset-0 flex items-center justify-center bg-gray-100">
     <div class="loader__spinner ease-linear rounded-full border-8 border-t-8 border-swirl h-32 w-32"></div>
   </div>
 </template>

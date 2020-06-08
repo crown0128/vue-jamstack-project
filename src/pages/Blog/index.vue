@@ -1,6 +1,7 @@
 <template>
   <Layout ref="layout">
     <section class="container mx-auto">
+      <Loader v-if="isLoading" />
       <h1 class="text-4xl antialiased text-coffee tracking-widest border-b border-coffee text-center mb-10">
         Blog
       </h1>
@@ -90,10 +91,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-// .post_image {
-//   width: 500px;
-//   height: 400px;
-// }
-</style>

@@ -1,6 +1,7 @@
 <template>
   <Layout>
-    <div class="container mx-auto mb-32">
+    <div class="container mx-auto mb-32 relative">
+      <Loader v-if="isLoading" />
       <h1 class="text-4xl text-coffee border-b border-coffee mb-3 tracking-widest text-center mx-auto">{{ selectedOrder ? 'Order details' : 'My orders' }}</h1>
       <div v-if="orders.length && !selectedOrder">
         <table class="table-auto w-full">
@@ -42,10 +43,11 @@
 <script>
 import axios from "axios";
 import dayjs from "dayjs";
+import Loader from "@/components/Loader";
 import Order from "@/components/Order";
 export default {
   name: "AccountOrders",
-  components: { Order },
+  components: { Loader, Order },
   data() {
     return {
       isLoading: true,

@@ -24,14 +24,14 @@
             <div class="mb-4 w-full">
               <label for="email" class="block mb-2">Your email</label>
 
-              <input v-model="email" type="email" name="email" placeholder="Enter your email address..." :disabled="isLoading" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none focus:shadow-outline" />
+              <input v-model="email" type="text" name="email" placeholder="Enter your email address..." :disabled="isLoading" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none focus:shadow-outline" />
             </div>
             <div class="flex items-center text-right">
               <div class="w-2/3">
-                <p class="text-center" v-if="isSuccessful">
+                <p class="pr-4" v-if="isSuccessful">
                   {{ successMessage }}
                 </p>
-                <p class="text-center text-red-500" v-if="!isSuccessful && errorMessage">
+                <p class="pr-4 text-red-500" v-if="!isSuccessful && errorMessage">
                   {{ errorMessage }}
                 </p>
               </div>
@@ -108,7 +108,6 @@ export default {
       if (!this.errorMessage && !newValue.length) {
         this.errorMessage = "Email cannot be empty";
       }
-      // @TODO check email format
     },
     $page: {
       deep: true,
@@ -121,12 +120,20 @@ export default {
     }
   },
   methods: {
+    checkEmailFormat(email) {
+      const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(email);
+    },
     register() {
-      // @TODO check email format
       this.isSuccessful = false;
       this.errorMessage = null;
       if (!this.email || !this.email.length) {
         this.errorMessage = "Email cannot be empty";
+        return;
+      }
+
+      if (!this.checkEmailFormat(this.email)) {
+        this.errorMessage = "Not a valid email format";
         return;
       }
 
